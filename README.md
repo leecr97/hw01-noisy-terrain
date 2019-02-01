@@ -7,7 +7,7 @@ Email: leecr@seas.upenn.edu
 ![](introimage.png)
 
 ## Live Project Demo
-[Link](link)
+[Link](https://leecr97.github.io/procedural-ocean-terrain/)
 
 ## Project Description
 A procedurally generated ocean terrain created using a custom shader. It incorporates different noise functions and noise function permutations to deform the surface and modify the color of the subdivided plane to give it the appearance of a flowing ocean.
@@ -24,5 +24,7 @@ Click on the live demo to see it in action!
 
 ## References
 [Perlin Noise GLSL implementations](https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83)
+
 [Worley Noise GLSL implementations](https://github.com/Erkaman/glsl-worley)
+
 [The Book of Shaders](https://thebookofshaders.com)
