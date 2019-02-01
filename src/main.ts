@@ -13,6 +13,8 @@ import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 const controls = {
   tesselations: 5,
   'Load Scene': loadScene, // A function pointer, essentially
+  Ambience: 0,
+  WaveStrength: 0.5,
 };
 
 let square: Square;
@@ -22,6 +24,9 @@ let aPressed: boolean;
 let sPressed: boolean;
 let dPressed: boolean;
 let planePos: vec2;
+let timeCount: number = 0;
+let amb: number = 0;
+let waves: number = 0.05;
 
 function loadScene() {
   square = new Square(vec3.fromValues(0, 0, 0));
@@ -82,6 +87,8 @@ function main() {
 
   // Add controls to the gui
   const gui = new DAT.GUI();
+  gui.add(controls, 'Ambience', { Good: 0, Evil: 1, MorallyAmbiguous: 2 } );
+  gui.add(controls, 'WaveStrength', 0, 1);
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -116,15 +123,19 @@ function main() {
     let velocity: vec2 = vec2.fromValues(0,0);
     if(wPressed) {
       velocity[1] += 1.0;
+      // console.log("moving...");
     }
     if(aPressed) {
       velocity[0] += 1.0;
+      // console.log("moving...");
     }
     if(sPressed) {
       velocity[1] -= 1.0;
+      // console.log("moving...");
     }
     if(dPressed) {
       velocity[0] -= 1.0;
+      // console.log("moving...");
     }
     let newPos: vec2 = vec2.fromValues(0,0);
     vec2.add(newPos, velocity, planePos);
@@ -134,17 +145,20 @@ function main() {
 
   // This function will be called every frame
   function tick() {
+    waves = controls.WaveStrength / 20.0;
+    timeCount += waves;
     camera.update();
     stats.begin();
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
     renderer.clear();
     processKeyPresses();
+    amb = controls.Ambience;
     renderer.render(camera, lambert, [
       plane,
-    ]);
+    ], timeCount, amb);
     renderer.render(camera, flat, [
       square,
-    ]);
+    ], timeCount, amb);
     stats.end();
 
     // Tell the browser to call `tick` again whenever it renders a new frame
@@ -158,6 +172,7 @@ function main() {
   }, false);
 
   renderer.setSize(window.innerWidth, window.innerHeight);
+  // console.log("width: " + window.innerWidth);
   camera.setAspectRatio(window.innerWidth / window.innerHeight);
   camera.updateProjectionMatrix();
 
